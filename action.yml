@@ -1,0 +1,24 @@
+name: 'MinIO Upload Action'
+description: 'GitHub Actions workflow to upload artifacts to MinIO server.'
+author: 'Jeongseok Kang'
+
+inputs:
+  arfifacts:
+    descriptions: 'Artifacts to upload'
+    required: true
+  access-key:
+    description: 'MinIO Access Key'
+    required: false
+  secret-key:
+    description: 'MinIO Secret Key'
+    required: false
+
+outputs:
+  result:
+    description: '`success` or `failure` is set.'
+  urls:
+    description: ''
+
+runs:
+  using: node20
+  main: dist/index.js

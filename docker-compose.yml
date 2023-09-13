@@ -1,0 +1,16 @@
+version: "3.4"
+
+volumes:
+  minio_data:
+
+services:
+  minio:
+    image: minio/minio
+    container_name: minio
+    restart: unless-stopped
+    volumes:
+      - minio_data:/data
+    ports:
+      - 9000:9000
+      - 9001:9001
+    command: server /data --console-address ":9001"
