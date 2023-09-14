@@ -47906,7 +47906,7 @@ const input = {
 const minioClient = new minio.Client({
   endPoint: "10.82.230.111",
   port: 9000,
-  useSSL: false,
+  useSSL: true,
   accessKey: "minioadmin",
   secretKey: "minioadmin",
 });
