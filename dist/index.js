@@ -47999,7 +47999,7 @@ async function main(args) {
       await makeBucket(BUCKET_NAME);
     }
     const objInfo = await fPutObject(BUCKET_NAME, targetName, args.artifact, {});
-    const url = presignedUrl("GET", BUCKET_NAME, targetName, EXPIRY_IN_SECONDS, objInfo, new Date());
+    const url = await presignedUrl("GET", BUCKET_NAME, targetName, EXPIRY_IN_SECONDS, objInfo, new Date());
     console.log(`Presign: {"method": "GET", "bucket": "${BUCKET_NAME}", url: ${url}}`);
     core.setOutput("result", "success");
     core.setOutput("url", url);
