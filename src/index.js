@@ -91,7 +91,7 @@ const fPutObject = async (bucketName, objectName, filePath, metaData) => {
  */
 const presignedUrl = async (httpMethod, bucketName, objectName, expiry, reqParams, requestDate) => {
   return new Promise((resolve, reject) => {
-    minioClient.presignedUrl(httpMethod, bucketName, objectName, (err, presignedUrl) => {
+    minioClient.presignedUrl(httpMethod, bucketName, objectName, expiry, reqParams, requestDate, (err, presignedUrl) => {
       if (err) {
         console.error(err);
         return reject(err);
@@ -110,6 +110,7 @@ async function main(args) {
     }
     const objInfo = await fPutObject(BUCKET_NAME, targetName, args.artifact, {});
     const url = presignedUrl("GET", BUCKET_NAME, targetName, EXPIRY_IN_SECONDS, objInfo, Date.now());
+    console.log(`Presign: {"method": "GET", "bucket": "${BUCKET_NAME}", url: ${url}}`);
     core.setOutput("result", "success");
     core.setOutput("url", url);
   } catch (e) {
