@@ -3,9 +3,12 @@ description: 'GitHub Actions workflow to upload artifacts to MinIO server.'
 author: 'Jeongseok Kang'
 
 inputs:
-  arfifacts:
-    descriptions: 'Artifacts to upload'
+  arfifact:
+    descriptions: 'Artifact to upload'
     required: true
+  target:
+    description: 'Target name of the given artifact'
+    required: false
   access-key:
     description: 'MinIO Access Key'
     required: false
@@ -16,8 +19,8 @@ inputs:
 outputs:
   result:
     description: '`success` or `failure` is set.'
-  urls:
-    description: ''
+  url:
+    description: 'Presigned URL'
 
 runs:
   using: node20

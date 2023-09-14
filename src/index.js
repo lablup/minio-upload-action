@@ -6,7 +6,8 @@ const BUCKET_NAME = "docs";
 const EXPIRY_IN_SECONDS = 7 * 86400;
 
 const input = {
-  artifacts: core.getMultilineInput("artifacts", { required: true }),
+  artifact: core.getInput("artifact", { required: true }),
+  target: core.getInput("target", { required: false }),
   // expiryInSeconds: core.getInput("expiry-in-seconds", { required: false }),
   accessKey: core.getInput("access-key", { required: false }),
   secretKey: core.getInput("secret-Key", { required: false }),
@@ -101,21 +102,16 @@ const presignedUrl = async (httpMethod, bucketName, objectName, expiry, reqParam
 };
 
 async function main(args) {
+  const targetName = args.target || path.basename(args.artifact);
   try {
     const isBucketExist = await bucketExists(BUCKET_NAME);
     if (isBucketExist === false) {
       await makeBucket(BUCKET_NAME);
     }
-    const urls = await Promise.allSettled(
-      args.artifacts.map((artifact) => {
-        return fPutObject(BUCKET_NAME, path.basename(artifact), artifact, {})
-          .then((objInfo) => {
-            return presignedUrl("GET", BUCKET_NAME, path.basename(artifact), EXPIRY_IN_SECONDS, objInfo, Date.now());
-          });
-      })
-    );
+    const objInfo = await fPutObject(BUCKET_NAME, targetName, args.artifact, {});
+    const url = presignedUrl("GET", BUCKET_NAME, targetName, EXPIRY_IN_SECONDS, objInfo, Date.now());
     core.setOutput("result", "success");
-    core.setOutput("urls", urls);
+    core.setOutput("url", url);
   } catch (e) {
     console.error(e);
     core.setOutput("result", "failure");
